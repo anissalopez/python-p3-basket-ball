@@ -185,63 +185,85 @@ def game_dict():
         }
     }
 
+def get_teams():
+    return [game_dict()[team] for team in game_dict()]
+
+def get_all_players():
+    # return [team['players'] for team in get_teams()]
+    return [player for team in get_teams() for player in team['players']]
+    # [get_teams()['players']]
+
+    # players = list()
+    # for team in get_teams():
+    #     # for player in team['players']:
+    #     #     players.append(player)
+    # #     players.extend(team['players'])
+    # # breakpoint()
+    # # return players
 
 
 def num_points_per_game(player_name):
-    players = game_dict()['home']['players'] + game_dict()['away']['players']
-    for player in players:
-        if player['name'] == player_name:
-            return player["points_per_game"]
+    return next(player.get('points_per_game') for player in get_all_players() if player.get('name') == player_name)
+    # players = game_dict()['home']['players'] + game_dict()['away']['players']
+    # for player in players:
+    #     if player['name'] == player_name:
+    #         return player["points_per_game"]
 
  
 def player_age(player_name):
-    players = game_dict()['home']['players'] + game_dict()['away']['players']
-    for player in players:
-        if player['name'] == player_name:
-            return player["age"]
+    # players = game_dict()['home']['players'] + game_dict()['away']['players']
+    # for player in players:
+    #     if player['name'] == player_name:
+    #         return player["age"]
+
+    return next(player.get('age') for player in get_all_players() if player.get('name') == player_name)
+ 
 
 def team_colors(team_name):
-    team_array = [game_dict()[key] for key in game_dict()]
+    return next(team.get('colors') for team in get_teams() if team.get('team_name') == team_name)
+    # team_array = [game_dict()[key] for key in game_dict()]
     
-    for team in team_array: 
-        if team['team_name'] == team_name:
-            return team['colors']
+    # for team in team_array: 
+    #     if team['team_name'] == team_name:
+    #         return team['colors']
     
-
 def team_names():
-    team_array = [game_dict()[key] for key in game_dict()]
-    team_list = []
+    return [team.get('team_name') for team in get_teams()]
+    # team_array = [game_dict()[key] for key in game_dict()]
+    # team_list = []
     
-    for team in team_array:
-        team_list.append(team['team_name'])
-    return team_list
+    # for team in team_array:
+    #     team_list.append(team['team_name'])
+    # return team_list
 
 def player_numbers(team_name):
-    team_array = [game_dict()[key] for key in game_dict()]
-    team_jerseys = []
+    return [player.get('number') for team in get_teams() for player in team.get('players') if team.get('team_name') == team_name]
+    # team_array = [game_dict()[key] for key in game_dict()]
+    # team_jerseys = []
 
-    for team in team_array:
-        if team['team_name'] == team_name:
-            for players in team['players']:
-                team_jerseys.append(players['number'])
-    return team_jerseys
+    # for team in team_array:
+    #     if team['team_name'] == team_name:
+    #         for players in team['players']:
+    #             team_jerseys.append(players['number'])
+    # return team_jerseys
 
 
 def player_stats(player_name):
-    players = game_dict()['home']['players'] + game_dict()['away']['players']
+
+    return next(player for player in get_all_players() if player.get('name') == player_name)
+    # players = game_dict()['home']['players'] + game_dict()['away']['players']
    
-    for player in players:
-        if player['name'] == player_name:
-            return player
+    # for player in players:
+    #     if player['name'] == player_name:
+    #         return player
 
 
 def average_rebounds_by_shoe_brand():
-    players = game_dict()['home']['players'] + game_dict()['away']['players']
+    # players = game_dict()['home']['players'] + game_dict()['away']['players']
     d = {}
-    new_list = ""
 
 
-    for player in players:
+    for player in get_all_players():
        if d.get(player['shoe_brand']) == None:
            d[player['shoe_brand']] = [player['rebounds_per_game']]
        else:
